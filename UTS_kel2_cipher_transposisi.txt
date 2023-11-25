@@ -1,0 +1,96 @@
+#include <iostream>
+using namespace std;
+
+void cipherTransposisi(string& pesan, int kunci) {
+    int panjang = pesan.length();
+    char matriks[kunci][(panjang / kunci) + 1];
+
+    for (int i = 0; i < kunci; i++) {
+        for (int j = 0; j < (panjang / kunci) + 1; j++) {
+            matriks[i][j] = pesan[(j * kunci) + i];
+        }
+    }
+
+    for (int i = 0; i < kunci; i++) {
+        for (int j = 0; j < (panjang / kunci) + 1; j++) {
+            if (matriks[i][j] != '\0') {
+                cout << matriks[i][j];
+            }
+        }
+    }
+}
+
+void dekripsiCipherTransposisi(string& pesan, int kunci) {
+    int panjang = pesan.length();
+    char matriks[kunci][(panjang / kunci) + 1];
+
+    for (int i = 0; i < kunci; i++) {
+        for (int j = 0; j < (panjang / kunci) + 1; j++) {
+            matriks[i][j] = '\0';
+        }
+    }
+
+    int baris = 0, kolom = 0;
+
+    for (int i = 0; i < panjang; i++) {
+        if (baris == kunci) {
+            baris = 0;
+            kolom++;
+        }
+
+        matriks[baris][kolom] = '*';
+        baris++;
+    }
+
+    int index = 0;
+
+    for (int i = 0; i < kunci; i++) {
+        for (int j = 0; j < (panjang / kunci) + 1; j++) {
+            if (matriks[i][j] == '*') {
+                matriks[i][j] = pesan[index];
+                index++;
+            }
+        }
+    }
+
+    for (int i = 0; i < (panjang / kunci) + 1; i++) {
+        for (int j = 0; j < kunci; j++) {
+            if (matriks[j][i] != '\0') {
+                cout << matriks[j][i];
+            }
+        }
+    }
+}
+
+int main() {
+    string pesann;
+    int kunci;
+    char mode;
+
+    cout << "Masukkan pesan: ";
+    getline(cin, pesann);
+    
+    // Menghilangkan spasi dari string
+    string pesan = "";
+    for (char character : pesann) {
+        if (character != ' ') {
+            pesan += character;
+        }
+    }
+
+    cout << "Masukkan kunci: ";
+    cin >> kunci;
+
+    cout << "Apakah Anda ingin mengenkripsi atau mendekripsi pesan? (e/d): ";
+    cin >> mode;
+
+
+    if (mode == 'e') {
+        cipherTransposisi(pesan, kunci);
+    }
+    else if (mode == 'd') {
+        dekripsiCipherTransposisi(pesan, kunci);
+    }
+
+    return 0;
+}
